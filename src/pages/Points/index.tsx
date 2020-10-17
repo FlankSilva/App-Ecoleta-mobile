@@ -1,10 +1,10 @@
 import React from 'react'
 import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
-import { View, StyleSheet, TouchableOpacity, Text, ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import MaView from 'react-native-maps'
-import { SvgCssUri, SvgUri } from 'react-native-svg'
+import MaView, { Marker } from 'react-native-maps'
+import { SvgUri } from 'react-native-svg'
 
 
 const Points = () => {
@@ -12,6 +12,10 @@ const Points = () => {
 
   const handleNavigateBack = () => {
     navigation.goBack()
+  }
+
+  const handleNavigateToDetail = () => {
+    navigation.navigate('Detail')
   }
 
   return (
@@ -27,8 +31,31 @@ const Points = () => {
         </Text>
 
         <View style={styles.mapContainer}>
-          <MaView style={styles.map}>
-
+          <MaView 
+            style={styles.map} 
+              initialRegion={{
+                latitude: -22.941517,
+                longitude: -47.1849677,
+                latitudeDelta: 0.014,
+                longitudeDelta: 0.014,
+              }} 
+          >
+            <Marker 
+              style={styles.mapMarker}
+              onPress={handleNavigateToDetail}
+              coordinate={{
+                latitude: -22.941517,
+                longitude: -47.1849677,
+              }} 
+            >
+              <View style={styles.mapMarkerContainer}>
+                <Image 
+                  style={styles.mapMarkerImage} 
+                  source={{ uri: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60" }} 
+                />
+                <Text style={styles.mapMarkerTitle}>Mercado</Text>
+              </View>
+            </Marker>
           </MaView>
         </View>
       </View>
