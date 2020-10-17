@@ -1,1 +1,1 @@
-parei em 01:02:10
+parei em 01:22:35
