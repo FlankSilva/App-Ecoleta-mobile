@@ -1,15 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, TouchableOpacity, Text, Image, SafeAreaView } from 'react-native'
 import Constants from 'expo-constants'
 import { Feather as Icon, FontAwesome } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { RectButton } from 'react-native-gesture-handler'
+import api from '../../services/api'
+
+interface Params {
+  id: string;
+}
+
+interface Data {
+    image: string;
+    name: string;
+    email: string;
+    whatsapp: string;
+    city: string;
+    uf: string;
+  items: {
+    title: string;
+  }[]
+}
 
 const Detail = () => {
+  const [data, setData] = useState<Data>({} as Data)
+
   const navigation = useNavigation()
+  const route = useRoute()
+
+  const routeParams = route.params as Params;
+
+  useEffect(() => {
+    api.get(`points/${routeParams.id}`).then(response => {
+      setData(response.data)
+      
+    })
+  }, [])
 
   const handleNavigateBack = () => {
     navigation.goBack()
+  }
+
+  console.log(data.items);
+  
+
+  if (!data) {
+    return null;
   }
 
   return (
@@ -21,21 +57,21 @@ const Detail = () => {
 
         <Image 
           style={styles.pointImage} 
-          source={{ uri: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60' }}
+          source={{ uri: data.image }}
         />
 
         <Text style={styles.pointName}>
-          Mercadão do cebolinha
+          {data.name}
         </Text>
         <Text style={styles.pointItems}>
-          Lâmpadas, Óleo de cozinha
+          {data.items.map(item => item.title).join(', ')}
         </Text>
       <View style={styles.address}>
         <Text style={styles.addressTitle}>
-          Endereço
+          {data.city}
         </Text>
         <Text style={styles.addressContent}>
-          Rio do Sul
+          {data.uf}
         </Text>
       </View>
     </View>
